@@ -17,6 +17,15 @@ app.use(cors());
 
 dotenv.config();
 
+app.get("/health", (req, res) => {
+    const dbStatus = mongoose.connection.readyState === 1 ? "Connected" : "Disconnected";
+
+    res.json({
+        server: "Running",
+        database: dbStatus,
+    });
+});
+
 app.post("/register", async (req, res) => {
     try {
         const { name, email, mobileNumber, password } = req.body;
@@ -98,15 +107,6 @@ app.use((err, req, res, next) => {
     res
         .status(500)
         .json({ error: "Something went wrong! Please try again later." });
-});
-
-app.get("/health", (req, res) => {
-    const dbStatus = mongoose.connection.readyState === 1 ? "Connected" : "Disconnected";
-
-    res.json({
-        server: "Running",
-        database: dbStatus,
-    });
 });
 
 app.listen(port, () => {
